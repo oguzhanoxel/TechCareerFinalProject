@@ -1,4 +1,5 @@
-﻿using DataAccess.Dtos;
+﻿using ClosedXML.Excel;
+using DataAccess.Dtos;
 using DataAccess.Entities;
 using FinalProjectFormsApp.Forms.OrderForms;
 using FinalProjectFormsApp.Forms.ProductForms;
@@ -53,6 +54,12 @@ namespace FinalProjectFormsApp
             {
                 tabControl.TabPages.Remove(reportsPage);
             }
+
+            exportUsersExcel.Visible = CurrentUser.IsManager;
+            exportProductsExcel.Visible = CurrentUser.IsManager;
+            exportOrdersExcel.Visible = CurrentUser.IsManager;
+            exportVehiclesExcel.Visible = CurrentUser.IsManager;
+            exportReportsExcel.Visible = CurrentUser.IsManager;
 
             createVehicleButton.Visible = CurrentUser.IsManager;
             createProductButton.Visible = CurrentUser.IsManager;
@@ -224,13 +231,13 @@ namespace FinalProjectFormsApp
         // Button Click End
         public void UpdateUsersDataGridViewDataSource(string search = "")
         {
-            List<User> users = _userService.Search(search);
+            List<User> users = _userService.Search(search).OrderBy(u => u.Email).ToList();
 
             if (CurrentUser.IsManager || CurrentUser.IsSuperUser)
             {
-                usersDataGridView.DataSource = users.OrderBy(u => u.Email).ToList();
+                usersDataGridView.DataSource = users.ToList();
             } else {
-                usersDataGridView.DataSource = users.Where(u => u.Status == true).OrderBy(u => u.Email).ToList();
+                usersDataGridView.DataSource = users.Where(u => u.Status == true).ToList();
             }
         }
 
@@ -264,18 +271,18 @@ namespace FinalProjectFormsApp
 
         private void HandleVisibleUsersDataGridViewColumns()
         {
-            usersDataGridView.Columns["Id"].Visible = (CurrentUser.IsSuperUser) ? true : false;
-            usersDataGridView.Columns["Username"].Visible = (CurrentUser.IsSuperUser || CurrentUser.IsManager) ? true : false;
+            usersDataGridView.Columns["Id"].Visible = CurrentUser.IsManager;
+            usersDataGridView.Columns["Username"].Visible = CurrentUser.IsManager;
             usersDataGridView.Columns["Email"].Visible = true;
             usersDataGridView.Columns["Password"].Visible = false;
             usersDataGridView.Columns["FirstName"].Visible = true;
             usersDataGridView.Columns["LastName"].Visible = true;
-            usersDataGridView.Columns["City"].Visible = false;
+            usersDataGridView.Columns["City"].Visible = CurrentUser.IsManager;
             usersDataGridView.Columns["Address"].Visible = false;
             usersDataGridView.Columns["Birthdate"].Visible = false;
-            usersDataGridView.Columns["Phone"].Visible = false;
-            usersDataGridView.Columns["Salary"].Visible = false;
-            usersDataGridView.Columns["Status"].Visible = (CurrentUser.IsSuperUser || CurrentUser.IsManager) ? true : false;
+            usersDataGridView.Columns["Phone"].Visible = CurrentUser.IsManager;
+            usersDataGridView.Columns["Salary"].Visible = CurrentUser.IsManager;
+            usersDataGridView.Columns["Status"].Visible = CurrentUser.IsManager;
             usersDataGridView.Columns["IsManager"].Visible = true;
             usersDataGridView.Columns["IsSuperUser"].Visible = (CurrentUser.IsSuperUser) ? true : false;
         }
@@ -314,6 +321,75 @@ namespace FinalProjectFormsApp
             reportsDataGridView.Columns["ExpenseOfVehicles"].Visible = true;
             reportsDataGridView.Columns["Result"].Visible = true;
         }
+        
+        private DataTable GetDataTable(DataGridView dataGridView)
+        {
+            DataTable dataTable = new DataTable();
 
+            foreach (DataGridViewColumn column in dataGridView.Columns)
+            {
+                dataTable.Columns.Add(column.HeaderText, typeof(string));
+            }
+
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                dataTable.Rows.Add(row.Cells.Cast<DataGridViewCell>().Select(c => c.Value).ToArray());
+            }
+
+            return dataTable;
+        }
+
+        private void SaveToExcel(DataTable dataTable, string filePath, string worksheetName)
+        {
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                var worksheet = workbook.Worksheets.Add(worksheetName);
+                worksheet.Cell(1, 1).InsertTable(dataTable);
+                workbook.SaveAs(filePath);
+            }
+        }
+
+        private void ShowSaveFileDialog(DataTable dataTable, string filename)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Excel Files|*.xlsx";
+                saveFileDialog.Title = "Save Excel File";
+                saveFileDialog.FileName = $"{filename}.xlsx";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = saveFileDialog.FileName;
+                    string worksheetName = "1";
+
+                    SaveToExcel(dataTable, filePath, worksheetName);
+                }
+            }
+        }
+
+        private void ExportReportsExcel_Click(object sender, EventArgs e)
+        {
+            ShowSaveFileDialog(GetDataTable(reportsDataGridView), "Reports");
+        }
+
+        private void ExportVehiclesExcel_Click(object sender, EventArgs e)
+        {
+            ShowSaveFileDialog(GetDataTable(vehiclesDataGridView), "Vehicles");
+        }
+
+        private void ExportOrdersExcel_Click(object sender, EventArgs e)
+        {
+            ShowSaveFileDialog(GetDataTable(ordersDataGridView), "Orders");
+        }
+
+        private void ExportProductsExcel_Click(object sender, EventArgs e)
+        {
+            ShowSaveFileDialog(GetDataTable(productsDataGridView), "Products");
+        }
+
+        private void ExportUsersExcel_Click(object sender, EventArgs e)
+        {
+            ShowSaveFileDialog(GetDataTable(usersDataGridView), "Users");
+        }
     }
 }

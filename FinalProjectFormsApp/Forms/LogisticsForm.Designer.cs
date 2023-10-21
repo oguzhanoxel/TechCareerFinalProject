@@ -45,9 +45,15 @@
             this.vehicleSearch = new System.Windows.Forms.TextBox();
             this.vehiclesDataGridView = new System.Windows.Forms.DataGridView();
             this.reportsPage = new System.Windows.Forms.TabPage();
+            this.exportReportsExcel = new System.Windows.Forms.Button();
             this.createReportButton = new System.Windows.Forms.Button();
             this.reportSearch = new System.Windows.Forms.TextBox();
             this.reportsDataGridView = new System.Windows.Forms.DataGridView();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.exportVehiclesExcel = new System.Windows.Forms.Button();
+            this.exportOrdersExcel = new System.Windows.Forms.Button();
+            this.exportProductsExcel = new System.Windows.Forms.Button();
+            this.exportUsersExcel = new System.Windows.Forms.Button();
             this.tabControl.SuspendLayout();
             this.usersPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.usersDataGridView)).BeginInit();
@@ -76,6 +82,7 @@
             // 
             // usersPage
             // 
+            this.usersPage.Controls.Add(this.exportUsersExcel);
             this.usersPage.Controls.Add(this.userSearch);
             this.usersPage.Controls.Add(this.usersDataGridView);
             this.usersPage.Location = new System.Drawing.Point(4, 22);
@@ -108,6 +115,7 @@
             // 
             // productsPage
             // 
+            this.productsPage.Controls.Add(this.exportProductsExcel);
             this.productsPage.Controls.Add(this.createProductButton);
             this.productsPage.Controls.Add(this.productSearch);
             this.productsPage.Controls.Add(this.productsDataGridView);
@@ -151,6 +159,7 @@
             // 
             // ordersPage
             // 
+            this.ordersPage.Controls.Add(this.exportOrdersExcel);
             this.ordersPage.Controls.Add(this.createOrderButton);
             this.ordersPage.Controls.Add(this.orderSearch);
             this.ordersPage.Controls.Add(this.ordersDataGridView);
@@ -193,6 +202,7 @@
             // 
             // vehiclesPage
             // 
+            this.vehiclesPage.Controls.Add(this.exportVehiclesExcel);
             this.vehiclesPage.Controls.Add(this.createVehicleButton);
             this.vehiclesPage.Controls.Add(this.vehicleSearch);
             this.vehiclesPage.Controls.Add(this.vehiclesDataGridView);
@@ -235,6 +245,7 @@
             // 
             // reportsPage
             // 
+            this.reportsPage.Controls.Add(this.exportReportsExcel);
             this.reportsPage.Controls.Add(this.createReportButton);
             this.reportsPage.Controls.Add(this.reportSearch);
             this.reportsPage.Controls.Add(this.reportsDataGridView);
@@ -244,6 +255,16 @@
             this.reportsPage.TabIndex = 4;
             this.reportsPage.Text = "Reports";
             this.reportsPage.UseVisualStyleBackColor = true;
+            // 
+            // exportReportsExcel
+            // 
+            this.exportReportsExcel.Location = new System.Drawing.Point(639, 6);
+            this.exportReportsExcel.Name = "exportReportsExcel";
+            this.exportReportsExcel.Size = new System.Drawing.Size(75, 23);
+            this.exportReportsExcel.TabIndex = 14;
+            this.exportReportsExcel.Text = "Export Excel";
+            this.exportReportsExcel.UseVisualStyleBackColor = true;
+            this.exportReportsExcel.Click += new System.EventHandler(this.ExportReportsExcel_Click);
             // 
             // createReportButton
             // 
@@ -273,6 +294,46 @@
             this.reportsDataGridView.Size = new System.Drawing.Size(708, 384);
             this.reportsDataGridView.TabIndex = 11;
             this.reportsDataGridView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ReportsDataGridView_CellContentDoubleClick);
+            // 
+            // exportVehiclesExcel
+            // 
+            this.exportVehiclesExcel.Location = new System.Drawing.Point(639, 6);
+            this.exportVehiclesExcel.Name = "exportVehiclesExcel";
+            this.exportVehiclesExcel.Size = new System.Drawing.Size(75, 23);
+            this.exportVehiclesExcel.TabIndex = 15;
+            this.exportVehiclesExcel.Text = "Export Excel";
+            this.exportVehiclesExcel.UseVisualStyleBackColor = true;
+            this.exportVehiclesExcel.Click += new System.EventHandler(this.ExportVehiclesExcel_Click);
+            // 
+            // exportOrdersExcel
+            // 
+            this.exportOrdersExcel.Location = new System.Drawing.Point(639, 6);
+            this.exportOrdersExcel.Name = "exportOrdersExcel";
+            this.exportOrdersExcel.Size = new System.Drawing.Size(75, 23);
+            this.exportOrdersExcel.TabIndex = 16;
+            this.exportOrdersExcel.Text = "Export Excel";
+            this.exportOrdersExcel.UseVisualStyleBackColor = true;
+            this.exportOrdersExcel.Click += new System.EventHandler(this.ExportOrdersExcel_Click);
+            // 
+            // exportProductsExcel
+            // 
+            this.exportProductsExcel.Location = new System.Drawing.Point(639, 6);
+            this.exportProductsExcel.Name = "exportProductsExcel";
+            this.exportProductsExcel.Size = new System.Drawing.Size(75, 23);
+            this.exportProductsExcel.TabIndex = 17;
+            this.exportProductsExcel.Text = "Export Excel";
+            this.exportProductsExcel.UseVisualStyleBackColor = true;
+            this.exportProductsExcel.Click += new System.EventHandler(this.ExportProductsExcel_Click);
+            // 
+            // exportUsersExcel
+            // 
+            this.exportUsersExcel.Location = new System.Drawing.Point(639, 6);
+            this.exportUsersExcel.Name = "exportUsersExcel";
+            this.exportUsersExcel.Size = new System.Drawing.Size(75, 23);
+            this.exportUsersExcel.TabIndex = 18;
+            this.exportUsersExcel.Text = "Export Excel";
+            this.exportUsersExcel.UseVisualStyleBackColor = true;
+            this.exportUsersExcel.Click += new System.EventHandler(this.ExportUsersExcel_Click);
             // 
             // LogisticsForm
             // 
@@ -330,5 +391,11 @@
         private System.Windows.Forms.Button createReportButton;
         private System.Windows.Forms.TextBox reportSearch;
         private System.Windows.Forms.DataGridView reportsDataGridView;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.Button exportReportsExcel;
+        private System.Windows.Forms.Button exportVehiclesExcel;
+        private System.Windows.Forms.Button exportOrdersExcel;
+        private System.Windows.Forms.Button exportProductsExcel;
+        private System.Windows.Forms.Button exportUsersExcel;
     }
 }
